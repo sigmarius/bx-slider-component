@@ -9,3 +9,6 @@ $MESS['IMAGE_PROPORTIONAL_ALT'] = 'С сохранением пропорций,
 
 $MESS['SIGMARIUS_MIN_WIDTH'] = 'Минимальная ширина изображения';
 $MESS['SIGMARIUS_MIN_HEIGHT'] = 'Минимальная высота изображения';
+
+$MESS['SIGMARIUS_MAX_PREVIEW_TEXT_LENGTH'] = 'Максимальный размер текстового описания слайда';
+$MESS['MAX_PREVIEW_TEXT_LENGTH_TIP'] = 'Количество символов, по умолчанию - 100';

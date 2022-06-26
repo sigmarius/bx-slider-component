@@ -15,6 +15,12 @@ $arTemplateParameters = [
         'DEFAULT' => 'Y', // активен по умолчанию
         'REFRESH' => 'Y', // форма перезагружается при установке чекбокса
     ],
+    'MAX_PREVIEW_TEXT_LENGTH' => [
+        'PARENT' => 'SIGMARIUS', // группа для отображения настройки
+        'NAME' => GetMessage('SIGMARIUS_MAX_PREVIEW_TEXT_LENGTH'), // отображаемое название
+        'TYPE' => 'STRING', // выпадающий список
+        'DEFAULT' => '100', // значение по умолчанию
+    ],
 ];
 
 // все текущие значения параметров сохраняются в $arCurrentValues
@@ -27,6 +33,12 @@ if ($arCurrentValues['DEFAULT_IMG'] === 'N') {
         'TYPE' => 'CHECKBOX', // тип настройки
         'DEFAULT' => '', 
         'REFRESH' => 'Y', // форма перезагружается при установке чекбокса
+    ],
+        'MAX_PREVIEW_TEXT_LENGTH' => [
+        'PARENT' => 'SIGMARIUS', // группа для отображения настройки
+        'NAME' => GetMessage('SIGMARIUS_MAX_PREVIEW_TEXT_LENGTH'), // отображаемое название
+        'TYPE' => 'STRING', // выпадающий список
+        'DEFAULT' => '100', // значение по умолчанию
     ],
     'RESIZE_IMG' => [
         'PARENT' => 'SIGMARIUS', // группа для отображения настройки

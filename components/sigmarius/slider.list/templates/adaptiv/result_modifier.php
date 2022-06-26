@@ -20,6 +20,10 @@ if ($arParams['MIN_HEIGHT'] <= 0) {
     $arParams['MIN_HEIGHT'] = 250;
 }
 
+if ($arParams['MAX_PREVIEW_TEXT_LENGTH'] <= 0) {
+    $arParams['MAX_PREVIEW_TEXT_LENGTH'] = 100;
+}
+
 // если не установлен чекбокс "Оригинальный размер" 
 if ($arParams['DEFAULT_IMG'] === 'N') {
     foreach ($arResult as $arImage) {
@@ -52,7 +56,7 @@ if ($arParams['DEFAULT_IMG'] === 'N') {
 }
 
 foreach ($arResult as $key => $arItem) {
-    $arResult[$key]['PREVIEW_TEXT'] = TruncateText($arItem['PREVIEW_TEXT'], 75);
+    $arResult[$key]['PREVIEW_TEXT'] = TruncateText($arItem['PREVIEW_TEXT'], $arParams['MAX_PREVIEW_TEXT_LENGTH']);
 }
 
 
