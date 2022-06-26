@@ -2,6 +2,7 @@
  background-color: rgba(20, 49, 68, 0.6);
  padding: 20px;
  animation: anime-H3 1.3s ease-out;
+ color: #fff;
 }
 .carousel-inner p {
  font-size: 18px;

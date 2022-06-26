@@ -18,37 +18,39 @@ $this->addExternalJS("https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js
 <div id="sigmarius-slider" class="carousel slide" data-bs-ride="carousel">
     <!--переключатели-->
     <ol class="carousel-indicators">
-        <li data-bs-target="#sigmarius-slider" data-bs-slide-to="0" class="active"></li>
-        <li data-bs-target="#sigmarius-slider" data-bs-slide-to="1"></li>
-        <li data-bs-target="#sigmarius-slider" data-bs-slide-to="2"></li>
+        <?php 
+            $count = 0; 
+            foreach($arResult as $arItem): 
+        ?>
+            <li data-bs-target="#sigmarius-slider" 
+                data-bs-slide-to="<?= $count; ?>" 
+                <?php if($count === 0): ?>class="active"<?php endif; ?>
+            >
+            </li>
+            <?= $count++ ?>
+        <?php endforeach; ?>
     </ol>
 
     <!--Обертка для слайдов-->
     <div class="carousel-inner" role="listbox">
-        <div class="carousel-item active" data-bs-interval="3000">
-            <img src="<?= $templateFolder; ?>/img/slider-1.jpg" alt="Картинка 1">
-            <div class="carousel-caption">
-                <h3 class="text-uppercase">Адаптивный слайдер</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin aliquet elit lorem, ac congue mi
-                    eleifend sit amet. Sed dignissim viverra neque a tristique.</p>
+        <?php 
+            $count = 0; 
+            foreach($arResult as $arItem): 
+        ?>
+            <div id="<?=$this->GetEditAreaID($arItem['ID'])?>"
+            class="carousel-item <?php if($count === 0): ?>active<?php endif; ?>">
+                <img src="<?= $arItem['PREVIEW_PICTURE_URL']; ?>" alt="<?= $arItem['NAME']; ?>">
+                <div class="carousel-caption">
+                    <?php if($arParams['DISPLAY_NAME'] === 'Y' && $arItem['NAME']): ?>
+                        <h3 class="text-uppercase"><?= $arItem['NAME']; ?></h3>
+                    <?php endif; ?>
+                    <?php if($arParams['DISPLAY_PREVIEW_TEXT'] === 'Y' && $arItem['PREVIEW_TEXT']): ?>
+                        <p><?= $arItem['PREVIEW_TEXT']; ?></p>
+                    <?php endif; ?>
+                </div>
             </div>
-        </div>
-        <div class="carousel-item" data-bs-interval="3000">
-            <img src="<?= $templateFolder; ?>/img/slider-2.jpg" alt="Картинка 2">
-            <div class="carousel-caption">
-                <h3 class="text-uppercase">Анимированная прокрутка</h3>
-                <p>Aenean cursus imperdiet erat sit amet facilisis. Phasellus congue, sem in consectetur accumsan,
-                    tellus risus sollicitudin mauris, quis ornare libero magna eget ex.</p>
-            </div>
-        </div>
-        <div class="carousel-item" data-bs-interval="3000">
-            <img src="<?= $templateFolder; ?>/img/slider-3.jpg" alt="Картинка 3">
-            <div class="carousel-caption">
-                <h3 class="text-uppercase">Простая установка</h3>
-                <p>Praesent dictum, orci eget eleifend auctor, urna ex dapibus odio, vitae pretium neque massa vel
-                    neque. Donec et interdum diam. Morbi dignissim vestibulum mi ac viverra.</p>
-            </div>
-        </div>
+            <?= $count++ ?>
+        <?php endforeach; ?>
     </div>
 
     <!--Элементы управления-->
@@ -62,10 +64,13 @@ $this->addExternalJS("https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js
     </button>
 </div>
 
+<?php if(!empty($arParams['INTERVAL'])): ?>
 <script>
+    const interval = <?= json_encode($arParams['INTERVAL']); ?>;
     const myCarouselElement = document.getElementById('sigmarius-slider');
-    console.log(myCarouselElement);
+
     const carousel = new bootstrap.Carousel(myCarouselElement, {
-        interval: 2000
+        interval: interval
     });
 </script>
+<?php endif; ?>

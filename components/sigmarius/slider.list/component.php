@@ -59,13 +59,64 @@ $arSelectFields = ['ID', 'NAME', 'PREVIEW_TEXT', 'PREVIEW_PICTURE'];
 $rsElement = CIBlockElement::GetList($arOrder, $arFilter, false, $arNavParams, $arSelectFields);
 
 $arItems = [];
+$resultButtons = []; // массив для кнопок Изменить и удалить всплывающей панели
 
 while ($res = $rsElement->GetNext()) {
+    // кнопки Изменить и Удалить для всплывающей панели компонента
+    $arButtons = CIBlock::GetPanelButtons(
+            $arParams["IBLOCK_ID"], 
+            $res['ID'], 
+            0,               
+            ["SECTION_BUTTONS" => false, "SESSID" => false]
+    );
+
+    // массив для редактирования элементов
+    $resultButtons['EDIT_LINK'] = $arButtons['edit']['edit_element']['ACTION_URL'];
+    $resultButtons['EDIT_LINK_TEXT'] = $arButtons['edit']['edit_element']['TEXT'];
+
+    // массив для удаления элементов
+    $resultButtons['DELETE_LINK'] = $arButtons['edit']['delete_element']['ACTION_URL'];
+    $resultButtons['DELETE_LINK_TEXT'] = $arButtons['edit']['delete_element']['TEXT'];
+
+    // Метод добавляет кнопку, которая открывает указанный URL в popup-окне
+    $this->AddEditAction(
+        $res['ID'], // Идентификатор_области,
+        $resultButtons['EDIT_LINK'], // URL страницы, которая откроется в popup-окне
+        $resultButtons['EDIT_LINK_TEXT'], // Название кнопки в toolbar
+    );
+
+    // Метод добавляет кнопку удаления элемента
+    $this->AddDeleteAction(
+        $res['ID'], //Идентификатор_области
+        $resultButtons['DELETE_LINK'], // URL страницы, удаляющая указанный элемент
+        $resultButtons['DELETE_LINK_TEXT'], // Название кнопки
+        [
+            "CONFIRM" => GetMessage('SIGMARIUS_DELETE_ELEMENT_CONFIRM'),
+        ]
+);
+
     $res['PREVIEW_PICTURE_URL'] = CFile::GetPath($res['PREVIEW_PICTURE']);
 
     $arItems[] = $res;
 }
 
 $arResult = $arItems;
+
+if ($USER->IsAuthorized()) {
+    // кнопка Добавить элемент на всплывающей панели компонента
+    $arButtons = CIBlock::GetPanelButtons(
+                $arParams["IBLOCK_ID"], 
+                0, 
+                0,               
+                ["SECTION_BUTTONS" => false, "SESSID" => false]
+            );
+
+    // определяем, активна ли включаемая область (ползунок Режим правки на верхней панели включен)
+    if ($APPLICATION->GetShowIncludeAreas()) {
+        // добавляем кнопки к всплывающей панели компонента
+        $this->addIncludeAreaIcons(CIBlock::GetComponentMenu($APPLICATION->GetPublicShowMode(), $arButtons));
+
+    }
+}
 
 $this->IncludeComponentTemplate();
