@@ -25,9 +25,8 @@ $this->addExternalJS("https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js
             <li data-bs-target="#sigmarius-slider" 
                 data-bs-slide-to="<?= $count; ?>" 
                 <?php if($count === 0): ?>class="active"<?php endif; ?>
-            >
-            </li>
-            <?= $count++ ?>
+            ></li>
+            <?= $count++; ?>
         <?php endforeach; ?>
     </ol>
 
@@ -39,7 +38,11 @@ $this->addExternalJS("https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js
         ?>
             <div id="<?=$this->GetEditAreaID($arItem['ID'])?>"
             class="carousel-item <?php if($count === 0): ?>active<?php endif; ?>">
-                <img src="<?= $arItem['PREVIEW_PICTURE_URL']; ?>" alt="<?= $arItem['NAME']; ?>">
+                <?php if($arParams['DEFAULT_IMG'] === 'N' && $arItem['PREVIEW_IMAGE']): ?>
+                    <img src="<?= $arItem['PREVIEW_IMAGE']['SRC']; ?>" alt="<?= $arItem['NAME']; ?>">
+                <?php else: ?>
+                    <img src="<?= $arItem['PREVIEW_PICTURE_URL']; ?>" alt="<?= $arItem['NAME']; ?>">
+                <?php endif; ?>
                 <div class="carousel-caption">
                     <?php if($arParams['DISPLAY_NAME'] === 'Y' && $arItem['NAME']): ?>
                         <h3 class="text-uppercase"><?= $arItem['NAME']; ?></h3>
