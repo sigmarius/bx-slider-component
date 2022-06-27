@@ -54,14 +54,42 @@ $arNavParams = [
     nTopCount => $arParams['NEWS_COUNT']
 ];
 
-$arSelectFields = ['ID', 'NAME', 'PREVIEW_TEXT', 'PREVIEW_PICTURE'];
+$arSelectFields = [
+    'ID', 
+    'NAME', 
+    'PREVIEW_TEXT', 
+    'PREVIEW_PICTURE', 
+    'IBLOCK_ID', // обязательно указывается при выборке свойств методом GetProperties()
+    // 'PROPERTY_LINK', // вывод свойств PROPERTY_<PROPERTY_CODE>
+    // 'PROPERTY_AUTHOR', // вывод свойств PROPERTY_<PROPERTY_CODE>
+    // 'PROPERTY_MULTI' // вывод свойств PROPERTY_<PROPERTY_CODE>
+];
+
+// выбираем все свойства инфоблока
+$arProperties = CIBlockProperty::GetList(
+    ['id' => 'asc'], // array arOrder = Array()
+    [
+        'ACTIVE' => 'Y',
+        'IBLOCK_ID' => $arParams['IBLOCK_ID']
+    ], //  array arFilter = Array()
+);
+
+while ($property = $arProperties->Fetch()) {
+    // чтобы не добавлять каждое свойство по имени => добавляем в массив $arSelectFields поля свойств для последующей передачи в GetList и выборки
+    $arSelectFields[] = 'PROPERTY_' . $property['CODE'];
+}
 
 $rsElement = CIBlockElement::GetList($arOrder, $arFilter, false, $arNavParams, $arSelectFields);
 
 $arItems = [];
 $resultButtons = []; // массив для кнопок Изменить и удалить всплывающей панели
 
-while ($res = $rsElement->GetNext()) {
+// GetNext - возвращает элементы
+// GetNextElement - возвращает элементы вместе со свойствами
+while ($objElem = $rsElement->GetNextElement()) {
+    // вернули объект со свойствами - достали все поля элементов
+    $res = $objElem->GetFields();
+
     // кнопки Изменить и Удалить для всплывающей панели компонента
     $arButtons = CIBlock::GetPanelButtons(
             $arParams["IBLOCK_ID"], 
@@ -96,6 +124,9 @@ while ($res = $rsElement->GetNext()) {
 );
 
     $res['PREVIEW_PICTURE_URL'] = CFile::GetPath($res['PREVIEW_PICTURE']);
+
+    // Возвращает все или некоторые значения свойств элемента
+    $res['PROPERTIES'] = $objElem->GetProperties();
 
     $arItems[] = $res;
 }
